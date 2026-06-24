@@ -200,6 +200,61 @@ const articles = [
   },
 ]
 
+const services = [
+  {
+    icon: 'compass',
+    eyebrow: 'Engagement',
+    title: 'AI 系统咨询',
+    desc: '帮团队把 AI 能力嵌入真实业务：从场景拆解、PoC 验证，到生产架构、稳定性治理。',
+    bullets: ['业务场景拆解', 'PoC → Production', '架构评审 & 风险评估'],
+    tag: 'Consulting',
+  },
+  {
+    icon: 'spark',
+    eyebrow: 'Build',
+    title: '智能体 & RAG 落地',
+    desc: '搭建可灰度、可观测的 RAG / Agent 工作流，强调数据治理、工具注册、回调编排。',
+    bullets: ['Agent Workflow', 'RAG & 检索增强', '工具与回调编排'],
+    tag: 'Project',
+  },
+  {
+    icon: 'rocket',
+    eyebrow: 'Hire',
+    title: '工程团队协作',
+    desc: '与后端 / AI 团队结对，建立 release-ready 的发布标准、灰度流程与可观测体系。',
+    bullets: ['Backend Reliability', '可观测与发布治理', 'Code Review & 培训'],
+    tag: 'Team',
+  },
+  {
+    icon: 'shield',
+    eyebrow: 'Speak',
+    title: '技术分享 / 写作',
+    desc: '把 AI 工程化的实践整理成可复用的笔记、workshop 与内部分享。',
+    bullets: ['内部分享 & Workshop', '技术写作 & 评审', '开源协作'],
+    tag: 'Community',
+  },
+]
+
+const highlights = [
+  { year: '2026', label: '主持团队 AI Native 转型工作坊', detail: '把后端工程团队整体拉到 AI-native 的工作方式。' },
+  { year: '2025', label: '开源 ai-toolkit（GitHub 1.2k+ star）', detail: '面向后端工程师的 AI 工具集合：Prompt 模板、Agent 脚手架。' },
+  { year: '2025', label: 'QCon 大会讲师：AI 应用的 release-ready 标准', detail: '分享 LLM 应用从 demo 到 production 的工程化路径。' },
+  { year: '2024', label: '主导工单系统 AI 升级，节省 60% 人工分流', detail: '在 SaaS 创业公司从 0 到 1 推动 AI 落地。' },
+  { year: '2023', label: '公司级最佳工程贡献奖', detail: '沉淀交易链路的高并发范式与发布治理标准。' },
+  { year: '2022', label: '技术博客《后端工程师的 AI 转型手记》开篇', detail: '记录从后端到 AI 工程师的真实路径与思考。' },
+]
+
+const interests = [
+  { label: 'System Design', desc: '把复杂系统拆成可演化的小模块' },
+  { label: 'AI for Work', desc: '让 AI 真正帮人完成工作，不只是 demo' },
+  { label: 'Open Source', desc: '持续维护 ai-toolkit 与若干小工具' },
+  { label: 'Writing', desc: '把工程经验沉淀成可复用的笔记' },
+  { label: 'Photography', desc: '用镜头记录城市与光影' },
+  { label: 'Coffee', desc: '每天一杯手冲，是写代码的仪式感' },
+  { label: 'Cycling', desc: '周末骑行，保持身体与思维在线' },
+  { label: 'Reading', desc: '设计、工程、认知科学，三类书交替看' },
+]
+
 /* ── Dynamic Background ── */
 
 function DynamicBackground() {
@@ -245,11 +300,9 @@ function Divider() {
   return <div className="glass-divider" aria-hidden="true" />
 }
 
-/* ── Loading Screen ── */
+/* ── Global effects (mouse parallax + scroll reveal) ── */
 
-function LoadingScreen({ done }: { done: () => void }) {
-  const [phase, setPhase] = React.useState(0)
-
+function useGlobalEffects() {
   React.useEffect(() => {
     const onMove = (e: MouseEvent) => {
       const els = document.querySelectorAll('.card-hover')
@@ -281,26 +334,45 @@ function LoadingScreen({ done }: { done: () => void }) {
     }
     window.addEventListener('mousemove', onMove)
 
-    // Scroll-reveal observer
-    const reveals = document.querySelectorAll('.reveal, .reveal-scale, .reveal-mask')
-    const io = new IntersectionObserver(
-      entries => {
-        entries.forEach(en => {
-          if (en.isIntersecting) {
-            en.target.classList.add('in')
-            io.unobserve(en.target)
-          }
-        })
-      },
-      { rootMargin: '-8% 0px -8% 0px', threshold: 0.05 }
-    )
-    reveals.forEach(r => io.observe(r))
+    // Scroll-reveal observer — runs once and observes dynamically too
+    const setupReveals = () => {
+      const reveals = document.querySelectorAll('.reveal, .reveal-scale, .reveal-mask')
+      const io = new IntersectionObserver(
+        entries => {
+          entries.forEach(en => {
+            if (en.isIntersecting) {
+              en.target.classList.add('in')
+              io.unobserve(en.target)
+            }
+          })
+        },
+        { rootMargin: '-8% 0px -8% 0px', threshold: 0.05 }
+      )
+      reveals.forEach(r => io.observe(r))
+      return io
+    }
+    let io = setupReveals()
+
+    // Re-scan for reveals added later (e.g. new content injected via state)
+    const mo = new MutationObserver(() => {
+      io.disconnect()
+      io = setupReveals()
+    })
+    mo.observe(document.body, { childList: true, subtree: true })
 
     return () => {
       window.removeEventListener('mousemove', onMove)
       io.disconnect()
+      mo.disconnect()
     }
   }, [])
+}
+
+/* ── Loading Screen ── */
+
+function LoadingScreen({ done }: { done: () => void }) {
+  const [phase, setPhase] = React.useState(0)
+
   React.useEffect(() => {
     const t = [
       setTimeout(() => setPhase(1), 700),
@@ -383,8 +455,8 @@ function ThemeToggle() {
 /* ── Navbar ── */
 
 function Navbar() {
-  const links = ['About', 'Work', 'Skills', 'Projects', 'Now', 'Writing', 'Contact']
-  const ids = ['story', 'experience', 'capabilities', 'projects', 'now', 'articles', 'contact']
+  const links = ['About', 'Work', 'Services', 'Skills', 'Projects', 'Highlights', 'Now', 'Writing', 'Life', 'Contact']
+  const ids = ['story', 'experience', 'services', 'capabilities', 'projects', 'highlights', 'now', 'articles', 'interests', 'contact']
   const [active, setActive] = React.useState(-1)
   const navRef = React.useRef<HTMLElement>(null)
   const refs = React.useRef<(HTMLAnchorElement | null)[]>([])
@@ -643,6 +715,68 @@ function ArticlesSection() {
   )
 }
 
+/* ── Services Section ── */
+function ServicesSection() {
+  return (
+    <div className="service-grid">
+      {services.map((s, i) => (
+        <article className="glass card-hover service-card reveal-scale" key={s.title} style={{ ['--reveal-delay' as any]: (i * 90) + 'ms' }}>
+          <div className="service-top">
+            <div className="cap-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                {iconMap[s.icon] || iconMap.spark}
+              </svg>
+            </div>
+            <span className="service-tag">{s.tag}</span>
+          </div>
+          <span className="eyebrow">{s.eyebrow}</span>
+          <h3>{s.title}</h3>
+          <p>{s.desc}</p>
+          <ul className="service-bullets">
+            {s.bullets.map((b, j) => (
+              <li key={j}>
+                <span className="bullet-dot" />
+                {b}
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+/* ── Highlights Section ── */
+function HighlightsSection() {
+  return (
+    <div className="highlight-list">
+      {highlights.map((h, i) => (
+        <article className="glass card-hover highlight-item reveal-scale" key={h.label + h.year} style={{ ['--reveal-delay' as any]: (i * 70) + 'ms' }}>
+          <span className="highlight-year">{h.year}</span>
+          <div className="highlight-body">
+            <h3>{h.label}</h3>
+            <p>{h.detail}</p>
+          </div>
+        </article>
+      ))}
+    </div>
+  )
+}
+
+/* ── Interests Section ── */
+function InterestsSection() {
+  return (
+    <div className="interest-cloud">
+      {interests.map((it, i) => (
+        <article className="glass card-hover interest-chip reveal-scale" key={it.label} style={{ ['--reveal-delay' as any]: (i * 60) + 'ms' }}>
+          <h4>{it.label}</h4>
+          <p>{it.desc}</p>
+        </article>
+      ))}
+    </div>
+  )
+}
+
 function SecHeading({ e, t, c }: { e: string; t: string; c?: React.ReactNode }) {
   return (
     <div className="section-heading">
@@ -720,9 +854,17 @@ function Page() {
         <Divider />
 
         {/* Experience */}
-        <section className="experience-section section-in reveal">
+        <section id="experience" className="experience-section section-in reveal">
           <SecHeading e="Experience" t="一段持续向前的工程路径" c="从金融科技到 SaaS 再到 AI 工程化，每一次转变都是把后端能力扩展到新的领域。" />
           <ExperienceTimeline />
+        </section>
+
+        <Divider />
+
+        {/* Services / Engagement */}
+        <section id="services" className="services-section section-in reveal">
+          <SecHeading e="Engagement" t="可以一起做的事" c="如果你正在做与 AI 相关的项目、团队转型，或者想深入 Agent / RAG 工程化，欢迎聊一聊。" />
+          <ServicesSection />
         </section>
 
         <Divider />
@@ -743,8 +885,16 @@ function Page() {
 
         <Divider />
 
+        {/* Highlights / Recognition */}
+        <section id="highlights" className="highlights-section section-in reveal">
+          <SecHeading e="Highlights" t="路上的高光时刻" c="把过去几年值得记录的事写在这里 — 包括开源、分享、奖项与重要里程碑。" />
+          <HighlightsSection />
+        </section>
+
+        <Divider />
+
         {/* Now / Currently building */}
-        <section className="now-section section-in reveal">
+        <section id="now" className="now-section section-in reveal">
           <SecHeading e="Now" t="此刻在做的事" c="把 AI 能力做成长期可持续的工程能力，而不是短暂的 demo。" />
           <NowSection />
         </section>
@@ -752,9 +902,17 @@ function Page() {
         <Divider />
 
         {/* Articles */}
-        <section className="articles-section section-in reveal">
+        <section id="articles" className="articles-section section-in reveal">
           <SecHeading e="Writing" t="把实践写下来" c="把工程经验沉淀成可复用的笔记 — 包括 RAG 调优、Agent 设计和后端稳定性。" />
           <ArticlesSection />
+        </section>
+
+        <Divider />
+
+        {/* Interests / Beyond Code */}
+        <section id="interests" className="interests-section section-in reveal">
+          <SecHeading e="Beyond Code" t="代码之外的我" c="工程师只是一面，镜头、骑行、阅读、写作 — 这些是我保持好奇与平衡的方式。" />
+          <InterestsSection />
         </section>
 
         <Divider />
@@ -784,8 +942,19 @@ function Page() {
       </main>
 
       <footer className="site-footer">
-        <span>© {new Date().getFullYear()} Backend × AI Engineer</span>
-        <span>Built with care · Vite · React · TypeScript</span>
+        <div className="footer-inner">
+          <div className="footer-brand">
+            <span className="nav-logo">AI</span>
+            <div>
+              <strong>Backend × AI Engineer</strong>
+              <p>构建可落地、可维护、可扩展的智能化系统。</p>
+            </div>
+          </div>
+          <div className="footer-meta">
+            <span>© {new Date().getFullYear()} All rights reserved.</span>
+            <span>Built with care · Vite · React · TypeScript</span>
+          </div>
+        </div>
       </footer>
     </>
   )
@@ -795,6 +964,7 @@ function Page() {
 
 export default function App() {
   const [loading, setLoading] = React.useState(true)
+  useGlobalEffects()
   return (
     <>
       {loading && <LoadingScreen done={() => setLoading(false)} />}

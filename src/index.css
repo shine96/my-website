@@ -513,7 +513,7 @@ main {
   z-index: 0;
   width: min(1240px, calc(100% - 52px));
   margin: 0 auto;
-  padding: 140px 0 120px;
+  padding: 140px 0 60px;
 }
 
 section { scroll-margin-top: 120px; }
@@ -2665,6 +2665,7 @@ h1 em {
   .article-grid { grid-template-columns: repeat(2, 1fr); }
   .showcase { grid-template-columns: 1fr; }
   .showcase-bullets { border-left: none; padding-left: 0; border-top: 1px solid var(--border); padding-top: 16px; }
+  .service-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 680px) {
   .stats-strip { grid-template-columns: 1fr 1fr; }
@@ -2677,4 +2678,217 @@ h1 em {
   .exp-period { align-self: flex-start; }
   .showcase { padding: 24px; }
   .showcase-actions { gap: 14px; }
+  .service-grid { grid-template-columns: 1fr; }
+  .highlight-item { grid-template-columns: 70px 1fr; gap: 16px; padding: 22px; }
+  .interest-cloud { grid-template-columns: 1fr; }
+  .footer-inner { flex-direction: column; align-items: flex-start; }
 }
+
+/* ═══════════════════════════════════════
+   SERVICES — engagement cards
+   ═══════════════════════════════════════ */
+.services-section { padding: 20px 0; }
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.service-card {
+  padding: 28px;
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 280px;
+  position: relative;
+}
+.service-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.service-top .cap-icon { margin-bottom: 0; }
+.service-tag {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: var(--r-pill);
+  color: var(--c-mint);
+  background: rgba(48,217,164,0.08);
+  border: 1px solid rgba(48,217,164,0.22);
+}
+.service-card h3 {
+  margin-top: 8px;
+  font-family: 'Geist', 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--text);
+}
+.service-card p {
+  margin-top: 10px;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+  flex: 1;
+}
+.service-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.service-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.service-bullets .bullet-dot { margin-top: 6px; }
+
+/* ═══════════════════════════════════════
+   HIGHLIGHTS — milestone timeline
+   ═══════════════════════════════════════ */
+.highlights-section { padding: 20px 0; }
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.highlight-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 28px;
+  padding: 24px 28px;
+  border-radius: var(--r-lg);
+  align-items: center;
+  position: relative;
+}
+.highlight-item::before {
+  content: '';
+  position: absolute;
+  left: 116px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--border-glow), transparent);
+  opacity: .5;
+}
+.highlight-year {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--c-primary-2);
+  letter-spacing: 0.02em;
+  padding: 6px 12px;
+  border: 1px solid rgba(124,92,255,0.22);
+  border-radius: var(--r-pill);
+  background: rgba(124,92,255,0.06);
+  text-align: center;
+  justify-self: start;
+}
+.highlight-body h3 {
+  font-family: 'Geist', 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.highlight-body p {
+  margin-top: 6px;
+  color: var(--text2);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ═══════════════════════════════════════
+   INTERESTS — beyond code chips
+   ═══════════════════════════════════════ */
+.interests-section { padding: 20px 0; }
+.interest-cloud {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.interest-chip {
+  padding: 22px;
+  border-radius: var(--r-md);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 110px;
+  justify-content: center;
+}
+.interest-chip h4 {
+  font-family: 'Geist', 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text);
+}
+.interest-chip p {
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER — refined with brand block
+   ═══════════════════════════════════════ */
+.site-footer {
+  margin: 0;
+  padding: 28px 0 24px;
+  border-top: 1px solid var(--border);
+  background: transparent;
+}
+.footer-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.footer-brand .nav-logo {
+  width: 36px;
+  height: 36px;
+  font-size: 12px;
+}
+.footer-brand strong {
+  display: block;
+  font-family: 'Geist', 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.footer-brand p {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--text3);
+  letter-spacing: 0.01em;
+}
+.footer-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  font-size: 11px;
+  color: var(--text4);
+  letter-spacing: 0.04em;
+  font-family: 'JetBrains Mono', monospace;
+}
+.footer-meta span:last-child { color: var(--text4); }
