@@ -327,21 +327,106 @@ img, svg { display: block; }
 /* ═══════════════════════════════════════
    GLASS PANEL — Apple Liquid Glass
    ═══════════════════════════════════════ */
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Apple Vision Pro-grade
+   ═══════════════════════════════════════ */
 .glass {
   position: relative;
   border: 1px solid var(--border);
-  background: var(--glass-bg);
-  box-shadow: var(--sh-sm), var(--sh-glow);
-  backdrop-filter: blur(40px) saturate(180%);
-  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 35%),
+    linear-gradient(180deg, transparent 70%, rgba(0,0,0,0.10) 100%),
+    var(--glass-bg);
+  box-shadow:
+    var(--sh-sm),
+    var(--sh-glow),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.08);
+  backdrop-filter: blur(60px) saturate(200%) brightness(108%);
+  -webkit-backdrop-filter: blur(60px) saturate(200%) brightness(108%);
   overflow: hidden;
   isolation: isolate;
   transition:
-    border-color .5s var(--ease),
-    background .5s var(--ease),
-    box-shadow .5s var(--ease),
-    transform .5s var(--ease);
+    border-color .6s var(--ease),
+    background .6s var(--ease),
+    box-shadow .6s var(--ease),
+    transform .6s var(--ease-out);
 }
+
+/* Iridescent edge — outer gradient that traces the border */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    rgba(124,92,255,0.45) 0%,
+    rgba(90,200,250,0.20) 25%,
+    rgba(48,217,164,0.25) 50%,
+    rgba(255,184,77,0.20) 75%,
+    rgba(255,119,198,0.40) 100%);
+  background-size: 280% 280%;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  opacity: 0.6;
+  transition: opacity .6s var(--ease);
+  animation: iridescence 18s linear infinite;
+  z-index: -1;
+}
+
+/* Top-edge inner highlight — light catching the rim */
+.glass::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.16) 0%,
+    rgba(255,255,255,0.04) 8%,
+    transparent 22%,
+    transparent 78%,
+    rgba(124,92,255,0.04) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hover — glass brightens, edge becomes more colorful */
+.glass:hover {
+  border-color: var(--border-h);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.09) 0%, transparent 35%),
+    linear-gradient(180deg, transparent 70%, rgba(0,0,0,0.06) 100%),
+    var(--glass-h);
+  box-shadow:
+    var(--sh-md),
+    var(--sh-glow),
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.06);
+}
+.glass:hover::before { opacity: 1; }
+
+/* Refraction shimmer — moves across on hover */
+.glass .shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(105deg,
+    transparent 30%,
+    rgba(255,255,255,0.10) 45%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.10) 55%,
+    transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 1.2s var(--ease-out);
+  pointer-events: none;
+  z-index: 1;
+}
+.glass:hover .shimmer { transform: translateX(120%); }
 
 .glass::before {
   content: '';
@@ -2892,3 +2977,463 @@ h1 em {
   font-family: 'JetBrains Mono', monospace;
 }
 .footer-meta span:last-child { color: var(--text4); }
+
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Chips & Pills
+   ═══════════════════════════════════════ */
+.pill {
+  position: relative;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px !important;
+  border-radius: var(--r-pill) !important;
+  border: 1px solid rgba(124,92,255,0.28) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 50%),
+    rgba(124,92,255,0.08) !important;
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  color: var(--c-primary-2) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 1px 12px rgba(124,92,255,0.18);
+  font-family: 'Geist', 'Inter', sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.08em !important;
+  text-transform: none;
+  transition: all .35s var(--ease);
+}
+.pill:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.14) 0%, transparent 50%),
+    rgba(124,92,255,0.14) !important;
+  border-color: rgba(124,92,255,0.45) !important;
+  transform: translateY(-1px);
+}
+.pill span {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--c-electric), var(--c-mint));
+  box-shadow: 0 0 12px var(--c-electric), 0 0 0 3px rgba(124,92,255,0.16);
+  animation: dotPulse 2.4s ease-in-out infinite;
+}
+
+/* Tags (hero) — liquid chips */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 34px;
+}
+.tags span {
+  padding: 7px 14px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-pill) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 60%),
+    rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  color: var(--text2) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  font-family: 'Geist', 'Inter', sans-serif !important;
+  letter-spacing: 0.01em !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 1px 4px rgba(0,0,0,0.12);
+  transition: all .35s var(--ease);
+}
+.tags span:hover {
+  border-color: rgba(124,92,255,0.40) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 60%),
+    rgba(124,92,255,0.10) !important;
+  color: var(--text) !important;
+  transform: translateY(-1px);
+}
+
+/* Mini tags (cards) */
+.mini-tags span {
+  padding: 5px 11px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-pill) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 60%),
+    rgba(255,255,255,0.025) !important;
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  color: var(--text2) !important;
+  font-size: 11px !important;
+  font-weight: 500 !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 1px 2px rgba(0,0,0,0.10);
+  transition: all .3s var(--ease);
+}
+.mini-tags span:hover {
+  border-color: rgba(124,92,255,0.40) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%),
+    rgba(124,92,255,0.10) !important;
+  color: var(--text) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Navbar segmented control
+   ═══════════════════════════════════════ */
+.nav-links {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 60%),
+    rgba(255,255,255,0.035) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(255,255,255,0.06) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 1px 6px rgba(0,0,0,0.20) !important;
+}
+.nav-active {
+  color: var(--text) !important;
+  font-weight: 600 !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 60%),
+    rgba(255,255,255,0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.32),
+    0 1px 12px rgba(124,92,255,0.24),
+    0 0 0 1px rgba(124,92,255,0.20) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+}
+.nav-pill {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.18) 0%, transparent 60%),
+    rgba(255,255,255,0.12) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.32),
+    0 1px 12px rgba(124,92,255,0.24),
+    0 0 0 1px rgba(124,92,255,0.20) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+}
+.nav-logo {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.30) 0%, transparent 50%),
+    linear-gradient(135deg, #a0b4ff 0%, #c8a8ff 100%) !important;
+  border: 1px solid rgba(255,255,255,0.30) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.50),
+    0 4px 16px rgba(124,92,255,0.36),
+    0 0 24px rgba(124,92,255,0.20) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Theme button
+   ═══════════════════════════════════════ */
+.theme-btn {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 60%),
+    rgba(255,255,255,0.04) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 1px 6px rgba(0,0,0,0.16) !important;
+  transition: all .35s var(--ease-spring) !important;
+}
+.theme-btn:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 60%),
+    rgba(124,92,255,0.14) !important;
+  color: var(--c-primary-2) !important;
+  border-color: rgba(124,92,255,0.40) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 4px 16px rgba(124,92,255,0.32) !important;
+  transform: scale(1.08) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Buttons
+   ═══════════════════════════════════════ */
+.btn-primary {
+  position: relative;
+  color: #0a0a14 !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.40) 0%, transparent 35%),
+    linear-gradient(135deg, #b4c4ff 0%, #d4b8ff 100%) !important;
+  border: 1px solid rgba(255,255,255,0.40) !important;
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.10),
+    0 12px 36px rgba(124,92,255,0.36),
+    0 0 60px rgba(124,92,255,0.18) !important;
+  font-weight: 600 !important;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.30);
+}
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.025);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 -1px 0 rgba(0,0,0,0.10),
+    0 18px 48px rgba(124,92,255,0.46),
+    0 0 80px rgba(124,92,255,0.26) !important;
+}
+.btn-secondary {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08) 0%, transparent 50%),
+    rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.10) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 1px 8px rgba(0,0,0,0.16) !important;
+}
+.btn-secondary:hover {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.12) 0%, transparent 50%),
+    rgba(255,255,255,0.10) !important;
+  border-color: rgba(255,255,255,0.20) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.20),
+    0 6px 20px rgba(124,92,255,0.20),
+    0 0 0 1px rgba(124,92,255,0.20) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Project status badges
+   ═══════════════════════════════════════ */
+.project-status {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px !important;
+  border: 1px solid !important;
+  border-radius: var(--r-pill) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.16);
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase;
+}
+.project-status::before {
+  content: '';
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 8px currentColor;
+}
+.status-planning {
+  color: var(--c-amber) !important;
+  background: rgba(255,184,77,0.10) !important;
+  border-color: rgba(255,184,77,0.36) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,184,77,0.24),
+    0 0 16px rgba(255,184,77,0.18) !important;
+}
+.status-building {
+  color: var(--c-cyan) !important;
+  background: rgba(90,200,250,0.10) !important;
+  border-color: rgba(90,200,250,0.36) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(90,200,250,0.24),
+    0 0 16px rgba(90,200,250,0.18) !important;
+}
+.status-done {
+  color: var(--c-mint) !important;
+  background: rgba(48,217,164,0.10) !important;
+  border-color: rgba(48,217,164,0.36) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(48,217,164,0.24),
+    0 0 16px rgba(48,217,164,0.18) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Quote card
+   ═══════════════════════════════════════ */
+.quote-card {
+  padding: clamp(40px, 6vw, 72px) !important;
+  border-radius: var(--r-lg) !important;
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 40%),
+    var(--glass-bg) !important;
+  backdrop-filter: blur(60px) saturate(180%);
+  -webkit-backdrop-filter: blur(60px) saturate(180%);
+  border: 1px solid var(--border) !important;
+  box-shadow:
+    var(--sh-md),
+    inset 0 1px 0 rgba(255,255,255,0.10) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Now tag
+   ═══════════════════════════════════════ */
+.now-tag {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px !important;
+  border-radius: var(--r-pill) !important;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.14em !important;
+  text-transform: uppercase;
+  color: var(--c-electric) !important;
+  background: rgba(124,92,255,0.12) !important;
+  border: 1px solid rgba(124,92,255,0.32) !important;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    0 0 16px rgba(124,92,255,0.20);
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Metrics
+   ═══════════════════════════════════════ */
+.metric-grid div {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 50%),
+    rgba(255,255,255,0.03) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: var(--r-sm) !important;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.08),
+    0 1px 4px rgba(0,0,0,0.16) !important;
+  transition: all .35s var(--ease);
+}
+.metric-grid div:hover {
+  border-color: rgba(124,92,255,0.40) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.10) 0%, transparent 50%),
+    rgba(124,92,255,0.10) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.14),
+    0 4px 16px rgba(124,92,255,0.20) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Terminal
+   ═══════════════════════════════════════ */
+.terminal {
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: 11px !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 50%),
+    rgba(0,0,0,0.36) !important;
+  border: 1px solid rgba(48,217,164,0.24) !important;
+  color: var(--c-mint) !important;
+  border-radius: var(--r-sm) !important;
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(48,217,164,0.16),
+    0 0 24px rgba(48,217,164,0.10),
+    0 4px 16px rgba(0,0,0,0.32) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Avatar
+   ═══════════════════════════════════════ */
+.avatar-core {
+  border-radius: var(--r-md) !important;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.40) 0%, transparent 50%),
+    linear-gradient(135deg, #b4c4ff 0%, #d4b8ff 100%) !important;
+  border: 1px solid rgba(255,255,255,0.40) !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.55),
+    inset 0 -1px 0 rgba(0,0,0,0.10),
+    0 24px 68px rgba(124,92,255,0.36),
+    0 0 100px rgba(124,92,255,0.18) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Glass divider
+   ═══════════════════════════════════════ */
+.glass-divider {
+  width: min(420px, 88%) !important;
+  height: 1px;
+  margin: 100px auto !important;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(124,92,255,0.40) 30%,
+    rgba(90,200,250,0.40) 50%,
+    rgba(255,119,198,0.40) 70%,
+    transparent 100%) !important;
+  background-size: 200% 100%;
+  animation: divider-flow 8s linear infinite;
+  opacity: 0.8 !important;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Page-wide subtle tint
+   ═══════════════════════════════════════ */
+main {
+  position: relative;
+}
+main::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%,
+      rgba(124,92,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 50% at 50% 100%,
+      rgba(90,200,250,0.04) 0%, transparent 60%);
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Footer
+   ═══════════════════════════════════════ */
+.site-footer {
+  max-width: 1180px;
+  margin: 60px auto 32px;
+  padding: 28px 32px;
+  font-size: 12px;
+  letter-spacing: 0.01em;
+  color: var(--text3);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  background: transparent;
+}
+
+/* ═══════════════════════════════════════
+   LIQUID GLASS — Card hover light
+   ═══════════════════════════════════════ */
+.card-hover {
+  cursor: default;
+}
+.card-hover:hover {
+  transform: translateY(-6px) !important;
+  box-shadow:
+    var(--sh-lg),
+    var(--sh-color),
+    inset 0 1px 0 rgba(255,255,255,0.16),
+    inset 0 -1px 0 rgba(0,0,0,0.06) !important;
+}
